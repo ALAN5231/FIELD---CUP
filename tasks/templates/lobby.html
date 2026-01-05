@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="lobby-container">
+    <div class="header-section">
+        <h1>FIELD - CUP</h1>
+        <p>Bienvenido, <strong>{{ user.username }}</strong></p>
+        
+        <div class="actions">
+            <a href="{% url 'create_team' %}"><button class="btn-action">Crear Equipo</button></a>
+            <a href="{% url 'create_tournament' %}"><button class="btn-action">Crear Torneo</button></a>
+        </div>
+    </div>
+
+    <hr class="main-divider">
+
+    <div class="lobby-content">
+        <div class="left-column">
+            <h2>Mis Equipos</h2>
+            {% if teams %}
+                <div class="cards-grid">
+                    {% for team in teams %}
+                        <div class="card">
+                            <a href="{% url 'team_detail' team.id %}">
+                                <strong>{{ team.name }}</strong>
+                            </a>
+                            {% if team.logo %}
+                                <img src="{{ team.logo.url }}" class="card-img">
+                            {% else %}
+                                <p class="no-img">Sin logo</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No has creado ningún equipo todavía.</p>
+            {% endif %}
+        </div>
+
+        <div class="right-column">
+            <h2>Mis Torneos</h2>
+            {% if tournaments %}
+                <div class="cards-grid">
+                    {% for tournament in tournaments %}
+                        <div class="card">
+                            <a href="{% url 'tournament_detail' tournament.id %}">
+                                <strong>{{ tournament.name }}</strong>
+                            </a>
+                            {% if tournament.image %}
+                                <img src="{{ tournament.image.url }}" class="card-img">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No has creado torneos aún.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

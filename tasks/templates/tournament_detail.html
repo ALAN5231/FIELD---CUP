@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="tournament-container">
+
+    <div class="tournament-header">
+        <h1>Detalle del torneo</h1>
+        <h2>{{ tournament.name }}</h2>
+        {% if tournament.image %}
+            <img src="{{ tournament.image.url }}" class="tournament-image">
+        {% endif %}
+        <p class="team-info">Creado el {{ tournament.created }}</p>
+
+        {% if is_owner %}
+        <div class="tournament-actions">
+            <a href="{% url 'edit_tournament' tournament.id %}"><button class="btn-primary">Editar</button></a>
+            <a href="{% url 'delete_tournament' tournament.id %}"><button class="btn-danger">Eliminar</button></a>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section">
+        <h3>Equipos inscritos</h3>
+        {% if teams_in_tournament %}
+            <div class="teams-grid">
+                {% for tt in teams_in_tournament %}
+                    <div class="team-mini-card">
+                        <div class="team-logo-wrapper">
+                            {% if tt.team.logo %}
+                                <img src="{{ tt.team.logo.url }}" alt="{{ tt.team.name }}">
+                            {% else %}
+                                <div class="no-logo-placeholder"></div>
+                            {% endif %}
+                        </div>
+                        <span class="team-name-small">{{ tt.team.name }}</span>
+
+                        {% if is_owner and not matches %}
+                        <form method="post" action="{% url 'remove_team_from_tournament' tournament.id tt.team.id %}">
+                            {% csrf_token %}
+                            <button class="btn-remove-mini" type="submit">×</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="info-text">No hay equipos inscritos.</p>
+        {% endif %}
+
+        {% if is_owner %}
+        <div class="tournament-actions">
+            <a href="{% url 'add_team_to_tournament' tournament.id %}">
+                <button class="btn-primary">Inscribir equipo</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section">
+        <h3>Partidos</h3>
+        {% if is_owner and not matches %}
+        <div class="tournament-actions">
+            <form method="post" action="{% url 'generate_matches' tournament.id %}">
+                {% csrf_token %}
+                <button class="btn-primary" type="submit">Generar enfrentamientos</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% regroup matches by round_number as rounds %}
+        {% for round in rounds %}
+            <h4 class="round-title">Jornada {{ round.grouper }}</h4>
+            <div class="matches-list">
+                {% for match in round.list %}
+                <div class="match-card">
+                    <div class="match-content">
+                        <span class="m-team home">{{ match.home_team.name }}</span>
+                        
+                        <div class="score-container">
+                            {% if match.played %}
+                                <span class="score-box">{{ match.home_goals }}</span>
+                                <span class="vs">vs</span>
+                                <span class="score-box">{{ match.away_goals }}</span>
+                            {% else %}
+                                {% if is_owner %}
+                                <form class="match-form-modern" method="post" action="{% url 'record_match_result' match.id %}">
+                                    {% csrf_token %}
+                                    <input type="number" name="home_goals" min="-" placeholder="-">
+                                    <span class="vs">vs</span>
+                                    <input type="number" name="away_goals" min="-" placeholder="-">
+                                    <button type="submit" class="btn-check" title="Registrar resultador">L</button> 
+                                    </form>
+                                {% else %}
+                                    <span class="vs">vs</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <span class="m-team away">{{ match.away_team.name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="section">
+        <h3>Tabla de posiciones</h3>
+        <div class="table-responsive">
+            <table class="standings-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipo</th>
+                        <th>PJ</th>
+                        <th>PG</th>
+                        <th>PE</th>
+                        <th>PP</th>
+                        <th>GF</th>
+                        <th>GC</th>
+                        <th>DG</th>
+                        <th>PTS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in standings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="table-team-name">{{ row.team.name }}</td>
+                        <td>{{ row.PJ }}</td>
+                        <td>{{ row.PG }}</td>
+                        <td>{{ row.PE }}</td>
+                        <td>{{ row.PP }}</td>
+                        <td>{{ row.GF }}</td>
+                        <td>{{ row.GC }}</td>
+                        <td>{{ row.DG }}</td>
+                        <td><strong>{{ row.PTS }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

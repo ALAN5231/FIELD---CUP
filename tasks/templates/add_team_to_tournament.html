@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="edit-container">
+    <h1>Inscribir equipo en {{ tournament.name }}</h1>
+
+    <form class="edit-form" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <p>Selecciona un equipo</p>
+            <select name="team_id" required>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="edit-actions">
+            <button type="submit" class="btn-primary">Agregar equipo</button>
+            <a href="{% url 'tournament_detail' tournament.id %}" class="btn-secondary">Volver</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

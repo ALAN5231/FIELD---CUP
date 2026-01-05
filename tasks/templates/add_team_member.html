@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="add-member-container">
+    <h2>Agregar integrante a {{ team.name }}</h2>
+
+    {% if error %}
+        <div class="form-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="add-member-form">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username del usuario" required>
+
+        <div class="add-member-actions">
+            <button type="submit">Agregar</button>
+            <a href="{% url 'team_detail' team.id %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

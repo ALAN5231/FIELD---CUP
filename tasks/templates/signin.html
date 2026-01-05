@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="signin-container">
+    <div class="left">
+
+
+        <div class="logo-box">
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="logo">
+            <h1 class="title">FIELD-CUP</h1>
+        </div>
+  
+
+        <h2>Login</h2>
+        <p>¿Ya tienes una cuenta? <a href="/signup">Registrarse</a></p>
+
+
+        {{ error }}
+
+        <form action="/signin/" method="post">
+            {% csrf_token %}
+            
+
+            <form>
+                
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" placeholder="Ingresa tu correo">        
+                
+
+                
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" autocomplete="current-password" required id="id_password" placeholder="Ingresa tu contraseña"> 
+                
+                
+                <button class="btn">
+                    Entrar
+                </button>
+            </form>
+            
+        </form>
+    </div>
+
+    <div class="right">
+        <img src="{% static 'images/entrenador.png' %}" class="Entrenador" alt="ilustracion">
+    </div>
+</div>
+
+{% endblock %}

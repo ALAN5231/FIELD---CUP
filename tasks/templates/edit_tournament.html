@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="edit-container">
+    <h1>Editar torneo</h1>
+
+    <form class="edit-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <p class="current-name">
+                Nombre actual: <strong>{{ tournament.name }}</strong>
+            </p>
+            <input type="text" name="name" placeholder="Nuevo nombre" required>
+        </div>
+
+        <div class="form-group">
+            <label>Imagen del torneo</label>
+            {% if tournament.image %}
+                <div class="current-logo">
+                    <img src="{{ tournament.image.url }}" alt="Imagen actual">
+                </div>
+            {% endif %}
+            <input type="file" name="image" accept="image/*">
+        </div>
+
+        <div class="edit-actions">
+            <button type="submit" class="btn-primary">Guardar cambios</button>
+            <a href="{% url 'tournament_detail' tournament.id %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

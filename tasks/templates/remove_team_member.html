@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Quitar integrante</h2>
+
+{% if member %}
+    <p>
+        ¿Estás seguro de que quieres quitar a
+        <strong>{{ member.user.username }}</strong>
+        del equipo <strong>{{ team.name }}</strong>?
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Sí, quitar</button>
+    </form>
+{% else %}
+    <p>El integrante no existe o ya fue eliminado.</p>
+{% endif %}
+
+<a href="{% url 'team_detail' team.id %}">Cancelar</a>
+{% endblock %}

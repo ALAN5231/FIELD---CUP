@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="team-detail-container">
+
+    <h1>Detalle del Equipo</h1>
+
+    <h2>{{ team.name }}</h2>
+
+    <div class="team-logo-box">
+        {% if team.logo %}
+            <img src="{{ team.logo.url }}">
+        {% else %}
+            <p>Este equipo no tiene logo</p>
+        {% endif %}
+    </div>
+
+    <p class="team-info">Creado el: {{ team.created }}</p>
+
+    <hr class="team-divider">
+
+    <h3>Integrantes del equipo</h3>
+
+    {% if members %}
+        <ul class="team-members">
+            {% for member in members %}
+                <li>
+                    <span>
+                        {{ member.user.username }}
+
+                        {% if member.user.id == team.owner.id %}
+                            <span class="owner-tag">CREADOR</span>
+                        {% endif %}
+                    </span>
+
+                    {% if user == team.owner and member.user != team.owner %}
+                        <a href="{% url 'remove_team_member' team.id member.user.id %}">
+                            Quitar
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-text">No hay integrantes aún.</p>
+    {% endif %}
+
+    {% if user == team.owner %}
+        <div class="team-actions">
+            <a href="{% url 'edit_team' team.id %}">
+                <button>Editar Equipo</button>
+            </a>
+
+            <a href="{% url 'add_team_member' team.id %}">
+                <button>Agregar Integrante</button>
+            </a>
+
+            <a href="{% url 'delete_team' team.id %}">
+                <button class="danger">Eliminar Equipo</button>
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>
+    {{ match.home_team.name }} vs {{ match.away_team.name }}
+</h2>
+
+<p>Jornada {{ match.round_number }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>{{ match.home_team.name }}</label>
+    <input type="number" name="home_goals" required min="0">
+
+    <br><br>
+
+    <label>{{ match.away_team.name }}</label>
+    <input type="number" name="away_goals" required min="0">
+
+    <br><br>
+
+    <button type="submit">Guardar resultado</button>
+</form>
+{% endblock %}

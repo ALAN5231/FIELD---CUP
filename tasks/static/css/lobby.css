@@ -1,0 +1,128 @@
+/* ================== CONTENEDOR PRINCIPAL ================== */
+.lobby-container {
+    width: 95%;
+    max-width: 1300px;
+    margin: 20px auto;
+    background: white;
+    min-height: 85vh;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header-section h1 {
+    font-size: 55px;
+    color: #0d4b8c;
+    margin: 0;
+    font-weight: bold;
+}
+
+/* ================== BOTONES (ESTILO LOGIN) ================== */
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-action {
+    background: #f58a1e;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-action:hover {
+    background: #0d4b8c;
+}
+
+/* ================== ESTRUCTURA DIVIDIDA ================== */
+.lobby-content {
+    display: flex;
+    gap: 40px; /* Espacio entre columnas */
+    margin-top: 30px;
+}
+
+.left-column, .right-column {
+    flex: 1; /* Ambas columnas miden lo mismo */
+    padding: 10px;
+}
+
+/* Línea divisoria visual */
+.left-column {
+    border-right: 2px solid #eee;
+    padding-right: 30px;
+}
+
+.lobby-container h2 {
+    color: #000000;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ================== TARJETAS (CARDS) ================== */
+.cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.card {
+    border: 2px solid #333; /* Estilo de tus inputs */
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.card:hover {
+    background: #f9f9f9;
+    border-color: #0d4b8c;
+}
+
+.card a {
+    color: #0d4b8c;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.card-img {
+    height: 50px;
+    width: 50px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.main-divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* Responsive: si la pantalla es pequeña, se pone uno bajo otro */
+@media (max-width: 768px) {
+    .lobby-content {
+        flex-direction: column;
+    }
+    .left-column {
+        border-right: none;
+        border-bottom: 2px solid #eee;
+        padding-right: 10px;
+        padding-bottom: 30px;
+    }
+}

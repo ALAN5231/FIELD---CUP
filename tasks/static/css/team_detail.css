@@ -1,0 +1,159 @@
+/* ================== CONTENEDOR PRINCIPAL ================== */
+.team-detail-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+    background: white;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    min-height: 80vh;
+}
+
+/* ================== TÍTULOS ================== */
+.team-detail-container h1 {
+    text-align: center;
+    font-size: 48px;
+    color: #0d4b8c;
+    margin-bottom: 10px;
+}
+
+.team-detail-container h2 {
+    text-align: center;
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.team-detail-container h3 {
+    text-align: center;
+    font-size: 22px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ================== LOGO DEL EQUIPO ================== */
+.team-logo-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.team-logo-box img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+}
+
+/* ================== INFO ================== */
+.team-info {
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* ================== LISTA DE MIEMBROS ================== */
+.team-members {
+    list-style: none;
+    padding: 0;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.team-members li {
+    border: 2px solid #333;
+    padding: 12px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.team-members li:hover {
+    border-color: #0d4b8c;
+    background: #f9f9f9;
+}
+
+.team-members .owner-tag {
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    background: #0d4b8c;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+/* ================== LINKS DE ACCIÓN ================== */
+.team-members a {
+    color: #c0392b;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.team-members a:hover {
+    text-decoration: underline;
+}
+
+/* ================== BOTONES ================== */
+.team-actions {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.team-actions button {
+    background: #f58a1e;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.team-actions button:hover {
+    background: #0d4b8c;
+}
+
+.team-actions .danger {
+    background: #c0392b;
+}
+
+.team-actions .danger:hover {
+    background: #922b21;
+}
+
+/* ================== HR ================== */
+.team-divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 30px 0;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+    .team-detail-container {
+        padding: 25px;
+    }
+
+    .team-detail-container h1 {
+        font-size: 38px;
+    }
+
+    .team-detail-container h2 {
+        font-size: 26px;
+    }
+}

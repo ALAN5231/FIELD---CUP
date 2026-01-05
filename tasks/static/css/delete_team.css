@@ -1,0 +1,81 @@
+/* ================== CONTENEDOR PRINCIPAL ================== */
+.delete-container {
+    max-width: 450px;
+    margin: 70px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+/* ================== TITULO ================== */
+.delete-container h1 {
+    color: #c0392b;
+    margin-bottom: 25px;
+}
+
+/* ================== MENSAJE ================== */
+.delete-container p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* ================== NOMBRE DEL EQUIPO ================== */
+.delete-team-name {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0d4b8c;
+    margin: 15px 0 25px;
+}
+
+/* ================== DIVISOR ================== */
+.delete-divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 25px 0;
+}
+
+/* ================== ACCIONES ================== */
+.delete-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* BOTÓN ELIMINAR */
+.btn-danger {
+    background: #c0392b;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-danger:hover {
+    background: #a93226;
+}
+
+/* BOTÓN CANCELAR */
+.btn-secondary {
+    background: #bdc3c7;
+    color: #333;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: #95a5a6;
+}

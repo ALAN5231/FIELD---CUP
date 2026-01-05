@@ -1,0 +1,176 @@
+/* ================== CONTENEDOR PRINCIPAL ================== */
+.profile-container {
+    width: 95%;
+    max-width: 1300px;
+    margin: 20px auto;
+    background: white;
+    min-height: 85vh;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* ================== ENCABEZADO ================== */
+.header-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header-section h1 {
+    font-size: 55px;
+    color: #0d4b8c;
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-section p {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* ================== BOTONES ================== */
+.actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-action {
+    background: #f58a1e;
+    color: white;
+    padding: 12px 35px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.btn-action:hover {
+    background: #0d4b8c;
+}
+
+/* ================== DIVISOR ================== */
+.main-divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* ================== ESTRUCTURA DIVIDIDA ================== */
+.profile-content {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.left-column,
+.right-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.left-column {
+    border-right: 2px solid #eee;
+    padding-right: 30px;
+}
+
+.right-column {
+    padding-left: 30px;
+}
+
+/* ================== TITULOS DE SECCION ================== */
+.profile-container h2 {
+    color: #000000;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+}
+
+/* ================== TARJETAS ================== */
+.cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.card {
+    border: 2px solid #333;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    background: #f5f8fb;
+    border-color: #0d4b8c;
+    transform: translateY(-2px);
+}
+
+.card a {
+    color: #0d4b8c;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* ================== ETIQUETAS ================== */
+.status-tag {
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    background: #0d4b8c;
+    padding: 5px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* Propietario / Organizador */
+.status-tag.owner {
+    background: #f58a1e;
+}
+
+/* Integrante / Participante */
+.status-tag.member {
+    background: #666;
+}
+
+/* ================== TEXTO VACIO ================== */
+.empty-text {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+    .profile-content {
+        flex-direction: column;
+    }
+
+    .left-column {
+        border-right: none;
+        border-bottom: 2px solid #eee;
+        padding-right: 0;
+        padding-bottom: 30px;
+    }
+
+    .right-column {
+        padding-left: 0;
+    }
+
+    .card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}

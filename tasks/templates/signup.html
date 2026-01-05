@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="signup-container">
+
+    <!-- IZQUIERDA -->
+    <div class="left">
+
+        <div class="logo-box">
+            <img src="{% static 'images/logo.jpg' %}" alt="logo" class="logo">
+            <h1 class="title">FIELD-CUP</h1>
+        </div>
+
+        <!-- TÍTULO -->
+        <h2>Crear cuenta</h2>
+        <p>¿Ya tienes una cuenta? <a href="/signin/">Inicia sesión</a></p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <!-- FORMULARIO -->
+        <form action="/signup/" method="POST">
+            {% csrf_token %}
+
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username" required>
+
+            <label for="id_password1">Password</label>
+            <input type="password" name="password1" id="id_password1" required>
+
+            <label for="id_password2">Confirmar password</label>
+            <input type="password" name="password2" id="id_password2" required>
+
+            <button type="submit" class="btn">
+                Registrarse
+            </button>
+        </form>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="right">
+        <img src="{% static 'images/entrenador2.png' %}" alt="Ilustración entrenador">
+    </div>
+
+</div>
+
+{% endblock %}
