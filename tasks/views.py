@@ -87,22 +87,22 @@ def lobby(request):
 
 @login_required
 def create_team(request):
-    if request.method == 'GET':
-        return render(request, 'create_team.html')
-    else:
+    if request.method == 'POST':
         team = Team.objects.create(
-            name=request.POST['name'],
+            name=request.POST.get('name'),
             owner=request.user,
-            logo=request.FILES.get('logo')
+            logo=request.FILES.get('logo')  # Cloudinary se activa aquí
         )
 
-        # Agregar automáticamente al owner como integrante
         TeamMember.objects.create(
             team=team,
             user=request.user
         )
 
         return redirect('lobby')
+
+    return render(request, 'create_team.html')
+
 
 
 
@@ -131,18 +131,19 @@ def team_detail(request, team_id):
 def edit_team(request, team_id):
     team = get_object_or_404(Team, pk=team_id, owner=request.user)
 
-    if request.method == 'GET':
-        return render(request, 'edit_team.html', {
-            'team': team
-        })
-    else:
-        team.name = request.POST['name']
+    if request.method == 'POST':
+        team.name = request.POST.get('name')
 
         if request.FILES.get('logo'):
-            team.logo = request.FILES['logo']
+            team.logo = request.FILES['logo']  # Reemplaza imagen en Cloudinary
 
         team.save()
         return redirect('team_detail', team_id=team.id)
+
+    return render(request, 'edit_team.html', {
+        'team': team
+    })
+
     
 @login_required
 def delete_team(request, team_id):
@@ -242,13 +243,14 @@ def profile(request):
 def create_tournament(request):
     if request.method == 'POST':
         Tournament.objects.create(
-            name=request.POST['name'],
+            name=request.POST.get('name'),
             image=request.FILES.get('image'),
             owner=request.user
         )
         return redirect('lobby')
 
     return render(request, 'create_tournament.html')
+
 
 @login_required
 def tournament_detail(request, tournament_id):
@@ -344,15 +346,12 @@ def tournament_detail(request, tournament_id):
 
 @login_required
 def edit_tournament(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
-
-    if tournament.owner != request.user:
-        return HttpResponseForbidden()
+    tournament = get_object_or_404(Tournament, id=tournament_id, owner=request.user)
 
     if request.method == 'POST':
-        tournament.name = request.POST['name']
+        tournament.name = request.POST.get('name')
 
-        if 'image' in request.FILES:
+        if request.FILES.get('image'):
             tournament.image = request.FILES['image']
 
         tournament.save()
