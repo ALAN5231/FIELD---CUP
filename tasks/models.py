@@ -61,6 +61,26 @@ class TournamentTeam(models.Model):
     def __str__(self):
         return f"{self.team.name} - {self.tournament.name}"
     
+
+#  ARBITROS  #
+class Referee(models.Model):
+    tournament = models.ForeignKey(
+        Tournament,
+        on_delete=models.CASCADE,
+        related_name='referees'
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        unique_together = ('tournament', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.tournament.name}"
+    
 #  PARTIDOS  #
 class Match(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
@@ -84,6 +104,32 @@ class Match(models.Model):
     away_goals = models.IntegerField(null=True, blank=True)
 
     played = models.BooleanField(default=False)
+
+    scheduled_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    scheduled_time = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    field_name = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    location_url = models.URLField(
+        blank=True
+    )
+
+    referee = models.ForeignKey(
+        Referee,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     created = models.DateTimeField(auto_now_add=True)
 

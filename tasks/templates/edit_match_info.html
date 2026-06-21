@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="edit-container">
+
+    <h1>Editar información del partido</h1>
+
+    <p>
+        {{ match.home_team.name }}
+        vs
+        {{ match.away_team.name }}
+    </p>
+
+    <form method="POST" class="edit-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Fecha</label>
+            <input
+                type="date"
+                name="scheduled_date"
+                value="{{ match.scheduled_date|date:'Y-m-d' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Hora</label>
+            <input
+                type="time"
+                name="scheduled_time"
+                value="{{ match.scheduled_time|time:'H:i' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Nombre del campo</label>
+            <input
+                type="text"
+                name="field_name"
+                value="{{ match.field_name }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Ubicación (Google Maps)</label>
+            <input
+                type="url"
+                name="location_url"
+                value="{{ match.location_url }}"
+            >
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="apply_location_all">
+                Guardar esta ubicación para todos los partidos del torneo
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>Árbitro</label>
+
+            <select name="referee">
+                <option value="">
+                    Sin asignar
+                </option>
+
+                {% for referee in referees %}
+                    <option
+                        value="{{ referee.id }}"
+                        {% if match.referee and match.referee.id == referee.id %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ referee.user.username }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="edit-actions">
+            <button type="submit" class="btn-primary">
+                Guardar
+            </button>
+
+            <a href="{% url 'tournament_detail' match.tournament.id %}"
+               class="btn-secondary">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

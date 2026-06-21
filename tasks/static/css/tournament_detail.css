@@ -176,6 +176,87 @@
     text-align: center;
 }
 
+.edit-match-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 30px;
+    height: 30px;
+
+    margin-left: 8px;
+
+    background: #0d4b8c;
+    color: white;
+
+    border-radius: 50%;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: 0.3s;
+}
+
+.edit-match-btn:hover {
+    transform: scale(1.1);
+    background: #0a3a6b;
+}
+
+.match-info-top{
+    display:flex;
+    justify-content:center;
+    gap:35px;
+
+    margin-bottom:12px;
+
+    font-size:14px;
+    color:#555;
+}
+
+.match-info-bottom{
+    margin-top:12px;
+
+    text-align:center;
+
+    font-size:14px;
+    color:#555;
+}
+
+.location-btn{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    background:#f58a1e;
+    color:white;
+
+    text-decoration:none;
+
+    margin-right:4px;
+}
+
+.location-btn-disabled{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    background:#bbb;
+    color:white;
+
+    margin-right:4px;
+}
+
 /* ================== SCORE ================== */
 .score-container {
     display: flex;
@@ -294,4 +375,8 @@
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
+}
+
+.match-card {
+    background: red !important;
 }

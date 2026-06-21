@@ -25,14 +25,21 @@
         <form action="/signup/" method="POST">
             {% csrf_token %}
 
-            <label for="id_username">Username</label>
+            <label for="id_username">Nombre de usuario</label>
             <input type="text" name="username" id="id_username" required>
 
-            <label for="id_password1">Password</label>
+            <label for="id_password1">Contraseña</label>
             <input type="password" name="password1" id="id_password1" required>
 
-            <label for="id_password2">Confirmar password</label>
+            <label for="id_password2">Confirmar contraseña</label>
             <input type="password" name="password2" id="id_password2" required>
+
+            <div style="margin:15px 0; text-align:left;">
+                <label>
+                    <input type="checkbox" name="terms" required>
+                    Acepto los términos y condiciones de FIELD-CUP
+                </label>
+            </div>
 
             <button type="submit" class="btn">
                 Registrarse

@@ -9,7 +9,13 @@
         {% if tournament.image %}
             <img src="{{ tournament.image.url }}" class="tournament-image">
         {% endif %}
-        <p class="team-info">Creado el {{ tournament.created }}</p>
+        <p class="team-info">
+            Creado el {{ tournament.created|date:"d" }}
+            de
+            {{ tournament.created|date:"F" }}
+            de
+            {{ tournament.created|date:"Y" }}
+        </p>
 
         {% if is_owner %}
         <div class="tournament-actions">
@@ -61,6 +67,50 @@
     <hr class="section-divider">
 
     <div class="section">
+        <h3>Árbitros</h3>
+
+        {% if referees %}
+            <div class="teams-grid">
+                {% for referee in referees %}
+                    <div class="team-mini-card">
+
+                        <span class="team-name-small">
+                            {{ referee.user.username }}
+                        </span>
+
+                        {% if is_owner %}
+                        <form method="post"
+                            action="{% url 'remove_referee' tournament.id referee.user.id %}">
+                            {% csrf_token %}
+                            <button class="btn-remove-mini" type="submit">
+                                ×
+                            </button>
+                        </form>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="info-text">No hay árbitros registrados.</p>
+        {% endif %}
+
+        {% if is_owner %}
+        <div class="tournament-actions">
+            <a href="{% url 'add_referee' tournament.id %}">
+                <button class="btn-primary">
+                    Agregar árbitro
+                </button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+    <hr class="section-divider">
+
+    <div class="section">
         <h3>Partidos</h3>
         {% if is_owner and not matches %}
         <div class="tournament-actions">
@@ -76,32 +126,141 @@
             <h4 class="round-title">Jornada {{ round.grouper }}</h4>
             <div class="matches-list">
                 {% for match in round.list %}
-                <div class="match-card">
-                    <div class="match-content">
-                        <span class="m-team home">{{ match.home_team.name }}</span>
-                        
-                        <div class="score-container">
-                            {% if match.played %}
-                                <span class="score-box">{{ match.home_goals }}</span>
-                                <span class="vs">vs</span>
-                                <span class="score-box">{{ match.away_goals }}</span>
-                            {% else %}
-                                {% if is_owner %}
-                                <form class="match-form-modern" method="post" action="{% url 'record_match_result' match.id %}">
-                                    {% csrf_token %}
-                                    <input type="number" name="home_goals" min="-" placeholder="-">
-                                    <span class="vs">vs</span>
-                                    <input type="number" name="away_goals" min="-" placeholder="-">
-                                    <button type="submit" class="btn-check" title="Registrar resultador">L</button> 
-                                    </form>
-                                {% else %}
-                                    <span class="vs">vs</span>
-                                {% endif %}
-                            {% endif %}
-                        </div>
+                <div class="match-card" style="position: relative; padding: 28px 24px;">
 
-                        <span class="m-team away">{{ match.away_team.name }}</span>
+                    <!-- INFORMACION SUPERIOR -->
+                    <div class="match-info-top" style="
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        gap:55px;
+                        margin-bottom:24px;
+                        font-size:15px;
+                        color:#555;
+                        flex-wrap:wrap;
+                    ">
+
+                        <span>
+                            🕒
+                            {% if match.scheduled_time %}
+                                {{ match.scheduled_time|time:"H:i" }}
+                            {% else %}
+                                --:--
+                            {% endif %}
+                        </span>
+
+                        <span>
+                            📅
+                            {% if match.scheduled_date %}
+                                {{ match.scheduled_date|date:"d - M - Y" }}
+                            {% else %}
+                                --/--
+                            {% endif %}
+                        </span>
+
+                        <span>
+                            {% if match.location_url %}
+                                <a href="{{ match.location_url }}"
+                                    target="_blank"
+                                    title="Abrir en Google Maps"
+                                    style="
+                                            display:inline-flex;
+                                            justify-content:center;
+                                            align-items:center;
+                                            width:28px;
+                                            height:28px;
+                                            border-radius:50%;
+                                            background:#f58a1e;
+                                            color:white;
+                                            text-decoration:none;
+                                            margin-right:6px;
+                                            font-weight:bold;
+                                    ">
+                                        📍
+                                    </a>
+                            {% else %}
+                                <span class="location-btn-disabled">📍</span>
+                            {% endif %}
+
+                            {% if match.field_name %}
+                                {{ match.field_name }}
+                            {% else %}
+                                Por asignar
+                            {% endif %}
+                        <span style="
+                            display:flex;
+                            align-items:center;
+                            gap:6px;
+                        ">
+
                     </div>
+
+                    <div class="match-content">
+                        <span class="m-team home"
+                            style="
+                                font-size:28px;
+                                font-weight:bold;
+                                color:#0d4b8c;
+                            ">{{ match.home_team.name }}</span>
+
+                        <div class="score-container"> 
+                            {% if match.played %} 
+                            <span class="score-box">{{ match.home_goals }}</span> 
+                            <span class="vs">vs</span> 
+                            <span class="score-box">{{ match.away_goals }}</span> 
+                            {% else %} {% if is_owner or match.referee.user == request.user%} 
+                            <form class="match-form-modern" method="post" action="{% url 'record_match_result' match.id %}">{% csrf_token %} <input type="number" name="home_goals" min="-" placeholder="-"> <span class="vs">vs</span> <input type="number" name="away_goals" min="-" placeholder="-"> <button type="submit" class="btn-check" title="Registrar resultador">L</button> </form> {% else %} <span class="vs">vs</span> {% endif %} {% endif %} </div>
+
+                        <span class="m-team away"
+                            style="
+                                font-size:28px;
+                                font-weight:bold;
+                                color:#0d4b8c;
+                            ">
+                            {{ match.away_team.name }}
+
+                            {% if is_owner %}
+                            <a href="{% url 'edit_match_info' match.id %}"
+                            title="Editar información del partido"
+                            style="
+                                    position:absolute;
+                                    top:12px;
+                                    right:12px;
+                                    display:inline-flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    width:32px;
+                                    height:32px;
+                                    background:#0d4b8c;
+                                    color:white;
+                                    border-radius:50%;
+                                    text-decoration:none;
+                                    font-size:16px;
+                            ">
+                                ✎
+                            </a>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <!-- INFORMACION INFERIOR -->
+                    <div class="match-info-bottom" style="
+                        margin-top:24px;
+                        text-align:center;
+                        font-size:15px;
+                        color:#555;
+                    ">
+
+                        👨‍⚖️ 
+
+                        {% if match.referee %}
+                            {{ match.referee.user.username }}
+                        {% else %}
+                            Arbitro: Por asignar
+                        {% endif %}
+
+                    </div>
+
                 </div>
                 {% endfor %}
             </div>

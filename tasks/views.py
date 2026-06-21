@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import TaskForm, TournamentForm
-from .models import Task, Team, TeamMember, Tournament, TournamentTeam, Match
+from .models import Task, Team, TeamMember, Tournament, TournamentTeam, Match, Referee
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -77,7 +77,8 @@ def lobby(request):
 
     tournaments = Tournament.objects.filter(
         Q(owner=request.user) |
-        Q(tournamentteam__team__teammember__user=request.user)
+        Q(tournamentteam__team__teammember__user=request.user) |
+        Q(referees__user=request.user)
     ).distinct()
 
     return render(request, 'lobby.html', {
@@ -221,6 +222,10 @@ def profile(request):
     member_teams = Team.objects.filter(
         members=request.user
     ).exclude(owner=request.user)
+    
+    referee_tournaments = Tournament.objects.filter(
+        referees__user=request.user
+    ).exclude(owner=request.user).distinct()
 
     owned_tournaments = Tournament.objects.filter(owner=request.user)
 
@@ -233,6 +238,7 @@ def profile(request):
         'member_teams': member_teams,
         'owned_tournaments': owned_tournaments,
         'member_tournaments': member_tournaments,
+        'referee_tournaments': referee_tournaments,
     }
 
     return render(request, 'profile.html', context)
@@ -260,8 +266,13 @@ def tournament_detail(request, tournament_id):
         tournament=tournament,
         team__teammember__user=request.user
     ).exists()
+    
+    is_referee = Referee.objects.filter(
+            tournament=tournament,
+            user=request.user
+        ).exists()
 
-    if not is_owner and not is_team_member:
+    if not is_owner and not is_team_member and not is_referee:
         return HttpResponseForbidden()
 
     teams_in_tournament = TournamentTeam.objects.filter(
@@ -270,7 +281,7 @@ def tournament_detail(request, tournament_id):
 
     matches = Match.objects.filter(
         tournament=tournament
-    ).select_related('home_team', 'away_team').order_by('round_number')
+    ).select_related('home_team', 'away_team', 'referee__user').order_by('round_number')
 
     # -------------------------
     # TABLA DE POSICIONES
@@ -337,7 +348,8 @@ def tournament_detail(request, tournament_id):
         'teams_in_tournament': teams_in_tournament,
         'matches': matches,
         'is_owner': is_owner,
-        'standings': standings
+        'standings': standings,
+        'referees': Referee.objects.filter(tournament=tournament).select_related('user')
     })
 
 
@@ -482,8 +494,14 @@ def generate_matches(request, tournament_id):
 def record_match_result(request, match_id):
     match = get_object_or_404(Match, id=match_id)
 
-    # Solo el creador del torneo puede registrar resultados
-    if request.user != match.tournament.owner:
+    is_owner = request.user == match.tournament.owner
+
+    is_assigned_referee = (
+        match.referee is not None and
+        match.referee.user == request.user
+    )
+
+    if not is_owner and not is_assigned_referee:
         return HttpResponseForbidden()
 
     if request.method == 'POST':
@@ -497,3 +515,112 @@ def record_match_result(request, match_id):
     return render(request, 'record_match_result.html', {
         'match': match
     })
+
+@login_required
+def edit_match_info(request, match_id):
+    match = get_object_or_404(Match, id=match_id)
+
+    if request.user != match.tournament.owner:
+        return HttpResponseForbidden()
+
+    referees = Referee.objects.filter(
+        tournament=match.tournament
+    ).select_related('user')
+
+    if request.method == 'POST':
+
+        match.scheduled_date = request.POST.get('scheduled_date') or None
+        match.scheduled_time = request.POST.get('scheduled_time') or None
+
+        match.field_name = request.POST.get('field_name', '')
+        match.location_url = request.POST.get('location_url', '')
+
+        referee_id = request.POST.get('referee')
+
+        if referee_id:
+            match.referee = Referee.objects.get(id=referee_id)
+        else:
+            match.referee = None
+
+        match.save()
+        if 'apply_location_all' in request.POST:
+
+            Match.objects.filter(
+                tournament=match.tournament
+            ).exclude(
+                id=match.id
+            ).update(
+                field_name=match.field_name,
+                location_url=match.location_url
+            )
+            
+        return redirect(
+            'tournament_detail',
+            tournament_id=match.tournament.id
+        )
+
+    return render(request, 'edit_match_info.html', {
+        'match': match,
+        'referees': referees
+    })
+
+@login_required
+def add_referee(request, tournament_id):
+    tournament = get_object_or_404(
+        Tournament,
+        id=tournament_id
+    )
+
+    if request.user != tournament.owner:
+        return HttpResponseForbidden()
+
+    error = None
+
+    if request.method == 'POST':
+        username = request.POST['username']
+
+        user = User.objects.filter(
+            username=username
+        ).first()
+
+        if not user:
+            error = "El usuario no existe."
+
+        else:
+            Referee.objects.get_or_create(
+                tournament=tournament,
+                user=user
+            )
+
+            return redirect(
+                'tournament_detail',
+                tournament_id=tournament.id
+            )
+
+    return render(request, 'add_referee.html', {
+        'tournament': tournament,
+        'error': error
+    })
+    
+@login_required
+def remove_referee(request, tournament_id, user_id):
+    tournament = get_object_or_404(
+        Tournament,
+        id=tournament_id
+    )
+
+    if request.user != tournament.owner:
+        return HttpResponseForbidden()
+
+    referee = get_object_or_404(
+        Referee,
+        tournament=tournament,
+        user_id=user_id
+    )
+
+    referee.delete()
+
+    return redirect(
+        'tournament_detail',
+        tournament_id=tournament.id
+    )

@@ -41,8 +41,11 @@ urlpatterns = [
     path('tournaments/<int:tournament_id>/delete/', views.delete_tournament, name='delete_tournament'),
     path('tournaments/<int:tournament_id>/add-team/', views.add_team_to_tournament, name='add_team_to_tournament'),
     path('tournaments/<int:tournament_id>/remove-team/<int:team_id>/', views.remove_team_from_tournament, name='remove_team_from_tournament'),
+    path('tournaments/<int:tournament_id>/add-referee/', views.add_referee, name='add_referee'),
+    path('tournaments/<int:tournament_id>/remove-referee/<int:user_id>/',views.remove_referee,name='remove_referee'),
     path('tournament/<int:tournament_id>/generate-matches/',views.generate_matches, name='generate_matches'),
     path('matches/<int:match_id>/record/', views.record_match_result, name='record_match_result'),
+    path('matches/<int:match_id>/edit/', views.edit_match_info,name='edit_match_info'),
 ]
 
 if settings.DEBUG:
